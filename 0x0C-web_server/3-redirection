@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# Installs nginx web server
-
-apt-get update
-apt-get install -y nginx
-echo "Holberton School" > /etc/nginx/html/index.html
-echo "server {
-    listen 80;
-    listen [::]:80 default_server;
-    root   /etc/nginx/html;
-    index  index.html;
-    location /redirect_me {
-        return 301 https://twitter.com/Emmanue17280546;
-    }
-}" > /etc/nginx/sites-available/default
-service nginx restart
+# Configures Nginx server so that /redirect_me is redirecting to another page
+apt-get -y update
+apt-get -y install nginx
+ufw allow 'Nginx HTTP'
+echo "Hello World!" > /var/www/html/index.nginx-debian.html
+redirect="http {\n
+	server {\n
+		listen        80;\n
+		server_name   localhost 127.0.0.1;\n
+		location /redirect_me/ {\n
+			return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n
+		}\n
+	}"
+sed -i "s/http {/$redirect/" /etc/nginx/nginx.conf
+service nginx start
